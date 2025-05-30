@@ -1,27 +1,31 @@
-const express = require('express')
-const colors = require('colors')
-const moragan = require('morgan')
-const dotenv = require('dotenv')
-//dotenv conig
+const express = require('express');
+const colors = require('colors');
+const morgan = require('morgan'); // ✅ fixed typo from 'moragan' to 'morgan'
+const dotenv = require('dotenv');
+const connectDB = require('./config/db');
+
+// Load env variables
 dotenv.config();
-//rest object
-const app = express()
 
-//middlewares
-app.use(express.json())
-app.use(moragan('dev'))
+// Connect to MongoDB
+connectDB();
 
-//routes
-app.get("/", (req, res) => {
-  res.status(200).send({
-    message: "server running",
-  });
-});
+// Initialize express app
+const app = express();
 
-//port
-const port = process.env.PORT || 8080
+// Middleware
+app.use(express.json());
+app.use(morgan('dev'));
 
-//listen port
+// Routes
+app.use('/api/v1/user', require('./routes/userRoutes'));
+
+// Define port
+const port = process.env.PORT || 8080;
+
+// Start server
 app.listen(port, () => {
-  console.log(`Server Running in ${process.env.NODE_MODE} Mode on port ${process.env.PORT}`.bgCyan.white)
+  console.log(
+    `Server Running in ${process.env.NODE_ENV} mode on port ${port}`.bgCyan.white // ✅ fixed spelling and used fallback port variable
+  );
 });
