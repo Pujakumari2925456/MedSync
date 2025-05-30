@@ -1,21 +1,8 @@
-*{
-   padding: 0;
-   margin: 0;
-   box-sizing: border-box;
-}
+
 .main{
    padding:10px;
    height:100vh;
   
-}
-.spinner{
-   height: 100vh;
-   display:flex;
-   align-items: center;
-   justify-content: center;
-   z-index :9999;
-   background-color: rgba(0, 0, 0, 0.297);
-
 }
 .layout{
  display:flex;
@@ -35,7 +22,7 @@
 
 }
 
-.hceader{
+.header{
    height:10vh;
    margin-bottom: 20px;
    box-shadow: 0 0 2px gray;
@@ -54,4 +41,29 @@
 text-align: center;
 
 
+}
+.menu{
+    margin-top: 50px;
+}
+
+.menu-item{
+    margin-top: 30px;
+}
+.menu-item a{
+    color:white;
+  text-decoration: none;
+  font-size: 1.2rem;
+
+
+}
+.menu-item i{
+    font-size: 1.2rem;
+    margin: 0 15px;
+}
+.active{
+    background-color: white;
+    
+}
+.active a{
+color:rgb(102,0,0);
 }
