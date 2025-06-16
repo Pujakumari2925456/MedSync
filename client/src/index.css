@@ -53,5 +53,12 @@
    margin:20px 0px;
 text-align: center;
 
+.spinner{
+   height: 100vh;
+   display:flex;
+   align-items:center;
+   justify-content: center;
+   
+}
 
 }
