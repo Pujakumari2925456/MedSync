@@ -1,0 +1,133 @@
+import React from "react";
+import Layout from "../components/Layout";
+import { Col, Form, Input, Row, TimePicker, Card } from "antd";
+
+const ApplyDoctor = () => {
+  const handleFinish = (values) => {
+    console.log(values);
+  };
+
+  return (
+    <Layout>
+      <div className="bg-light py-4">
+        <Card className="mx-auto" style={{ maxWidth: 1000 }}>
+          <h1 className="text-center mb-4">Apply Doctor</h1>
+          <Form layout="vertical" onFinish={handleFinish}>
+            {/* PERSONAL DETAILS */}
+            <h4>Personal Details :</h4>
+            <Row gutter={20}>
+              <Col xs={24} md={8}>
+                <Form.Item
+                  label="First Name"
+                  name="firstName"
+                  rules={[{ required: true, message: "First name is required" }]}
+                >
+                  <Input placeholder="your first name" />
+                </Form.Item>
+              </Col>
+
+              <Col xs={24} md={8}>
+                <Form.Item
+                  label="Last Name"
+                  name="lastName"
+                  rules={[{ required: true, message: "Last name is required" }]}
+                >
+                  <Input placeholder="your last name" />
+                </Form.Item>
+              </Col>
+
+              <Col xs={24} md={8}>
+                <Form.Item
+                  label="Phone No"
+                  name="phone"
+                  rules={[{ required: true, message: "Phone number is required" }]}
+                >
+                  <Input placeholder="your contact no" />
+                </Form.Item>
+              </Col>
+
+              <Col xs={24} md={8}>
+                <Form.Item
+                  label="Email"
+                  name="email"
+                  rules={[{ required: true, message: "Email is required" }]}
+                >
+                  <Input type="email" placeholder="your email address" />
+                </Form.Item>
+              </Col>
+
+              <Col xs={24} md={8}>
+                <Form.Item label="Website" name="website">
+                  <Input placeholder="your website" />
+                </Form.Item>
+              </Col>
+
+              <Col xs={24} md={8}>
+                <Form.Item
+                  label="Address"
+                  name="address"
+                  rules={[{ required: true, message: "Address is required" }]}
+                >
+                  <Input placeholder="your clinic address" />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            {/* PROFESSIONAL DETAILS */}
+            <h4>Professional Details :</h4>
+            <Row gutter={20}>
+              <Col xs={24} md={8}>
+                <Form.Item
+                  label="Specialization"
+                  name="specialization"
+                  rules={[{ required: true, message: "Specialization is required" }]}
+                >
+                  <Input placeholder="your specialization" />
+                </Form.Item>
+              </Col>
+
+              <Col xs={24} md={8}>
+                <Form.Item
+                  label="Experience"
+                  name="experience"
+                  rules={[{ required: true, message: "Experience is required" }]}
+                >
+                  <Input placeholder="your experience" />
+                </Form.Item>
+              </Col>
+
+              <Col xs={24} md={8}>
+                <Form.Item
+                  label="Fees Per Consultation"
+                  name="feesPerConsultation"
+                  rules={[{ required: true, message: "Fees is required" }]}
+                >
+                  <Input placeholder="your consultation fee" />
+                </Form.Item>
+              </Col>
+
+              <Col xs={24} md={8}>
+                <Form.Item
+                  label="Timings"
+                  name="timings"
+                  rules={[{ required: true, message: "Timings are required" }]}
+                >
+                  <TimePicker.RangePicker format="HH:mm" />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            {/* SUBMIT BUTTON */}
+            <div className="text-center mt-4">
+              <button className="btn btn-primary px-5" type="submit">
+                Submit
+              </button>
+            </div>
+          </Form>
+        </Card>
+      </div>
+    </Layout>
+  );
+};
+
+export default ApplyDoctor;

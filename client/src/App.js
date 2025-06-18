@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { useSelector } from "react-redux";
 import Spinner from "./components/spinner";
+import ApplyDoctor from "./pages/ApplyDoctor";
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
       {loading && <Spinner />} {/* ✅ FIXED */}
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/apply-doctor" element={<ApplyDoctor />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
       </Routes>

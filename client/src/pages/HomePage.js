@@ -1,10 +1,13 @@
 import React, { useEffect } from "react";
 import axios from "axios";
-// import { Layout } from "antd";
 import Layout from "../components/Layout";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../redux/features/userSlice";
 
 const HomePage = () => {
-  // login user data
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
+
   const getUserData = async () => {
     try {
       const res = await axios.post(
@@ -16,7 +19,9 @@ const HomePage = () => {
           },
         }
       );
-      console.log("User Data:", res.data);
+      if (res.data.success) {
+        dispatch(setUser(res.data.data)); // ✅ Save user to Redux
+      }
     } catch (error) {
       console.log("Error fetching user data:", error);
     }
@@ -28,11 +33,14 @@ const HomePage = () => {
 
   return (
     <Layout>
+      {user?.name && (
+        <div style={{ fontWeight: "bold", paddingBottom: "10px" }}>
+          @{user.name}
+        </div>
+      )}
       <h1>Home page</h1>
     </Layout>
   );
 };
 
 export default HomePage;
-
-
