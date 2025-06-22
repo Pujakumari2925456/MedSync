@@ -3,7 +3,7 @@ const {
   loginController,
   registerController,
   authController,
-  applyDoctorController
+  // applyDoctorController
 } = require("../controllers/userCtrl");
 const authMiddleware = require('../middlewares/authMiddleware');
 
@@ -19,6 +19,6 @@ router.post('/register', registerController);
 router.post('/getUserData', authMiddleware, authController);
 
 // APPLY DOCTOR || PROTECTED
-router.post('/apply-doctor', authMiddleware, applyDoctorController);
+// router.post('/apply-doctor', authMiddleware, applyDoctorController);
 
 module.exports = router;
