@@ -1,10 +1,60 @@
 import React from "react";
 import Layout from "../components/Layout";
-import { Col, Form, Input, Row, TimePicker, Card } from "antd";
+import { Col, Form, Input, Row, TimePicker, Card, message } from "antd";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { showLoading, hideLoading } from "../redux/features/alertSlice";
+import axios from "axios";
 
 const ApplyDoctor = () => {
-  const handleFinish = (values) => {
-    console.log(values);
+  const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // Handle form submit
+  const handleFinish = async (values) => {
+    // ✅ Check if user exists
+    if (!user || !user._id) {
+      message.error("User data not found. Please login again.");
+      return;
+    }
+
+    try {
+      dispatch(showLoading());
+
+      // ⏰ Convert timings from moment to string
+      const formattedTimings = [
+        values.timings[0].format("HH:mm"),
+        values.timings[1].format("HH:mm"),
+      ];
+
+      const res = await axios.post(
+        "/api/v1/user/apply-doctor",
+        {
+          ...values,
+          timings: formattedTimings,
+          userId: user._id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      dispatch(hideLoading());
+
+      if (res.data.success) {
+        message.success(res.data.success);
+        navigate("/");
+      } else {
+        message.error(res.data.success);
+      }
+    } catch (error) {
+      dispatch(hideLoading());
+      message.error("Something went wrong");
+      console.error(error);
+    }
   };
 
   return (
@@ -22,7 +72,7 @@ const ApplyDoctor = () => {
                   name="firstName"
                   rules={[{ required: true, message: "First name is required" }]}
                 >
-                  <Input placeholder="your first name" />
+                  <Input placeholder="Your first name" />
                 </Form.Item>
               </Col>
 
@@ -32,7 +82,7 @@ const ApplyDoctor = () => {
                   name="lastName"
                   rules={[{ required: true, message: "Last name is required" }]}
                 >
-                  <Input placeholder="your last name" />
+                  <Input placeholder="Your last name" />
                 </Form.Item>
               </Col>
 
@@ -42,7 +92,7 @@ const ApplyDoctor = () => {
                   name="phone"
                   rules={[{ required: true, message: "Phone number is required" }]}
                 >
-                  <Input placeholder="your contact no" />
+                  <Input placeholder="Your contact no" />
                 </Form.Item>
               </Col>
 
@@ -52,13 +102,13 @@ const ApplyDoctor = () => {
                   name="email"
                   rules={[{ required: true, message: "Email is required" }]}
                 >
-                  <Input type="email" placeholder="your email address" />
+                  <Input type="email" placeholder="Your email address" />
                 </Form.Item>
               </Col>
 
               <Col xs={24} md={8}>
                 <Form.Item label="Website" name="website">
-                  <Input placeholder="your website" />
+                  <Input placeholder="Your website" />
                 </Form.Item>
               </Col>
 
@@ -68,7 +118,7 @@ const ApplyDoctor = () => {
                   name="address"
                   rules={[{ required: true, message: "Address is required" }]}
                 >
-                  <Input placeholder="your clinic address" />
+                  <Input placeholder="Your clinic address" />
                 </Form.Item>
               </Col>
             </Row>
@@ -82,7 +132,7 @@ const ApplyDoctor = () => {
                   name="specialization"
                   rules={[{ required: true, message: "Specialization is required" }]}
                 >
-                  <Input placeholder="your specialization" />
+                  <Input placeholder="Your specialization" />
                 </Form.Item>
               </Col>
 
@@ -92,7 +142,7 @@ const ApplyDoctor = () => {
                   name="experience"
                   rules={[{ required: true, message: "Experience is required" }]}
                 >
-                  <Input placeholder="your experience" />
+                  <Input placeholder="Your experience" />
                 </Form.Item>
               </Col>
 
@@ -102,7 +152,7 @@ const ApplyDoctor = () => {
                   name="feesPerConsultation"
                   rules={[{ required: true, message: "Fees is required" }]}
                 >
-                  <Input placeholder="your consultation fee" />
+                  <Input type="number" placeholder="Your consultation fee" />
                 </Form.Item>
               </Col>
 

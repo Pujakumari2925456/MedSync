@@ -15,10 +15,10 @@ router.post('/login', loginController);
 // REGISTER || POST
 router.post('/register', registerController);
 
-// GET USER DATA || PROTECTED
+// GET USER DATA || POST
 router.post('/getUserData', authMiddleware, authController);
 
-// APPLY DOCTOR || PROTECTED
+// APPLY DOCTOR || POST
 router.post('/apply-doctor', authMiddleware, applyDoctorController);
 
 module.exports = router;
