@@ -87,8 +87,43 @@ const authController = async (req, res) => {
   }
 };
 
+// Apply Doctor Controller
+const applyDoctorController = async (req, res) => {
+  try {
+    const newDoctor = await doctorModel({ ...req.body, status: 'pending' });
+    await newDoctor.save();
+
+    const adminUser = await userModel.findOne({ isAdmin: true });
+    const notification = adminUser.notification;
+
+    notification.push({
+      type: 'apply-doctor-request',
+      message: `${newDoctor.firstName} ${newDoctor.lastName} has applied for a doctor account`,
+      data: {
+        doctorId: newDoctor._id,
+        name: `${newDoctor.firstName} ${newDoctor.lastName}`,
+        onClickPath: '/admin/doctors'
+      }
+    });
+
+    await userModel.findByIdAndUpdate(adminUser._id, { notification });
+
+    res.status(201).send({
+      success: true,
+      message: 'Doctor account applied successfully'
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: 'Something went wrong while applying for a doctor account'
+    });
+  }
+};
+
 module.exports = {
   registerController,
   loginController,
+  applyDoctorController,
   authController
 };
