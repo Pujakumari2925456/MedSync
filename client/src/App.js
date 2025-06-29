@@ -5,6 +5,8 @@ import Register from "./pages/Register";
 import { useSelector } from "react-redux";
 import Spinner from "./components/spinner";
 import ApplyDoctor from "./pages/ApplyDoctor";
+import Doctors from "./pages/admin/Doctors";
+import Users from "./pages/admin/Users";
 
 
 function App() {
@@ -18,6 +20,8 @@ function App() {
         <Route path="/apply-doctor" element={<ApplyDoctor />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+         <Route path="/admin/users" element={<Users />} />
+          <Route path="/admin/doctors" element={<Doctors />} />
       </Routes>
     </BrowserRouter>
   );
