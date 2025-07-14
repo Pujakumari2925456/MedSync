@@ -1,5 +1,3 @@
-
-
 // import React from "react";
 // import "../styles/LayoutStyles.css";
 // import { adminMenu, userMenu } from "./../Data/data";
@@ -71,16 +69,19 @@ import { adminMenu, userMenu } from "./../Data/data";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Badge, message } from "antd";
+import { toast } from "react-toastify";
 
 const Layout = ({ children }) => {
   const { user } = useSelector((state) => state.user);
+  console.log(user);
+
   const location = useLocation();
   const navigate = useNavigate();
 
   // logout function
   const handleLogout = () => {
     localStorage.clear();
-    message.success("Logout Successfully");
+    toast.success("Logged out successfully!");
     navigate("/login");
   };
 
@@ -100,7 +101,10 @@ const Layout = ({ children }) => {
               {SidebarMenu.map((menu) => {
                 const isActive = location.pathname === menu.path;
                 return (
-                  <div key={menu.path} className={`menu-item ${isActive && "active"}`}>
+                  <div
+                    key={menu.path}
+                    className={`menu-item ${isActive && "active"}`}
+                  >
                     <i className={menu.icon}></i>
                     <Link to={menu.path}>{menu.name}</Link>
                   </div>
@@ -117,11 +121,13 @@ const Layout = ({ children }) => {
             <div className="header">
               <div className="header-content">
                 {/* <Badge count={user && user.notification.length}>
-                <i className="fa-solid fa-bell"></i>
+                  <i className="fa-solid fa-bell"></i>
                 </Badge> */}
-                {<Badge count={user?.notification?.length || 0}>
-                <i className="fa-solid fa-bell"></i>
-                </Badge>}
+                {
+                  <Badge count={user?.notification?.length || 0}>
+                    <i className="fa-solid fa-bell"></i>
+                  </Badge>
+                }
 
                 <Link to="/profile">{user?.name}</Link>
               </div>

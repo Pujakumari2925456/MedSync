@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { showLoading, hideLoading } from "../redux/features/alertSlice";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const ApplyDoctor = () => {
   const { user } = useSelector((state) => state.user);
@@ -13,9 +14,11 @@ const ApplyDoctor = () => {
 
   // Handle form submit
   const handleFinish = async (values) => {
+    // console.log(values);
+
     // ✅ Check if user exists
     if (!user || !user._id) {
-      message.error("User data not found. Please login again.");
+      toast.error("User data not found. Please login again.");
       return;
     }
 
@@ -48,11 +51,11 @@ const ApplyDoctor = () => {
         message.success(res.data.success);
         navigate("/");
       } else {
-        message.error(res.data.success);
+        toast.error(res.data.message);
       }
     } catch (error) {
       dispatch(hideLoading());
-      message.error("Something went wrong");
+      toast.error("Something went wrong");
       console.error(error);
     }
   };
@@ -70,7 +73,9 @@ const ApplyDoctor = () => {
                 <Form.Item
                   label="First Name"
                   name="firstName"
-                  rules={[{ required: true, message: "First name is required" }]}
+                  rules={[
+                    { required: true, message: "First name is required" },
+                  ]}
                 >
                   <Input placeholder="Your first name" />
                 </Form.Item>
@@ -90,7 +95,9 @@ const ApplyDoctor = () => {
                 <Form.Item
                   label="Phone No"
                   name="phone"
-                  rules={[{ required: true, message: "Phone number is required" }]}
+                  rules={[
+                    { required: true, message: "Phone number is required" },
+                  ]}
                 >
                   <Input placeholder="Your contact no" />
                 </Form.Item>
@@ -130,7 +137,9 @@ const ApplyDoctor = () => {
                 <Form.Item
                   label="Specialization"
                   name="specialization"
-                  rules={[{ required: true, message: "Specialization is required" }]}
+                  rules={[
+                    { required: true, message: "Specialization is required" },
+                  ]}
                 >
                   <Input placeholder="Your specialization" />
                 </Form.Item>
@@ -140,7 +149,9 @@ const ApplyDoctor = () => {
                 <Form.Item
                   label="Experience"
                   name="experience"
-                  rules={[{ required: true, message: "Experience is required" }]}
+                  rules={[
+                    { required: true, message: "Experience is required" },
+                  ]}
                 >
                   <Input placeholder="Your experience" />
                 </Form.Item>
