@@ -60,8 +60,13 @@ const loginController = async (req, res) => {
       success: true,
       token,
       user: {
+        _id: user._id,
         name: user.name,
         email: user.email,
+        isAdmin: user.isAdmin,
+        isDoctor: user.isDoctor,
+        notification: user.notification,
+        seennotification: user.seennotification,
       },
     });
   } catch (error) {
@@ -75,7 +80,7 @@ const loginController = async (req, res) => {
 
 const authController = async (req, res) => {
   try {
-    const user = await userModel.findOne({ _id: req.body.userId });
+    const user = await userModel.findOne({ _id: req.userId });
     user.password = undefined;
     if (!user) {
       return res.status(200).send({
@@ -97,6 +102,7 @@ const authController = async (req, res) => {
     });
   }
 };
+
 //apply Doctor ctrl
 const applyDoctorController = async (req, res) => {
   try {
@@ -143,7 +149,7 @@ const applyDoctorController = async (req, res) => {
 //Notification ctrl
 const getAllNotificationController = async (req, res) => {
   try {
-    const user = await userModel.findOne({ _id: req.body.userId });
+    const user = await userModel.findOne({ _id: req.userId });
     const seennotification = user.seennotification;
     const notification = user.notification;
     seennotification.push(...notification);
@@ -167,7 +173,7 @@ const getAllNotificationController = async (req, res) => {
 
 const deleteAllNotificationController = async (req, res) => {
   try {
-    const user = await userModel.findOne({ _id: req.body.userId });
+    const user = await userModel.findOne({ _id: req.userId });
     user.notification = [];
     user.seennotification = [];
     const updatedUser = await user.save();

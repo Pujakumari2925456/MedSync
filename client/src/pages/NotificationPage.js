@@ -113,37 +113,6 @@ const NotificationPage = () => {
   //   </Layout>
   // );
 
-  // For polling : frequently checking notification in every 4 seconds for admin.
-  const fetchUserData = async () => {
-    try {
-      const res = await axios.post(
-        "/api/v1/user/getUserData",
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      if (res.data.success) {
-        dispatch(updateUser(res.data.data));
-      }
-    } catch (error) {
-      console.error("Polling error:", error);
-    }
-  };
-
-  useEffect(() => {
-    if (user?.isAdmin) {
-      const interval = setInterval(() => {
-        fetchUserData();
-      }, 4000);
-
-      return () => clearInterval(interval);
-    }
-  }, [user]);
-
   const items = [
     {
       label: "unRead",
