@@ -48,7 +48,7 @@ const ApplyDoctor = () => {
       dispatch(hideLoading());
 
       if (res.data.success) {
-        message.success(res.data.success);
+        toast.success(res.data.message);
         navigate("/");
       } else {
         toast.error(res.data.message);

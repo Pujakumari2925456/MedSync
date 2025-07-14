@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Layout from "./../components/Layout";
 import { message, Tabs } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { showLoading, hideLoading } from "../redux/features/alertSlice";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
+import { updateUser } from "../redux/features/userSlice";
 
 const NotificationPage = () => {
   const dispatch = useDispatch();
@@ -27,14 +29,15 @@ const NotificationPage = () => {
       );
       dispatch(hideLoading());
       if (res.data.success) {
-        message.success(res.data.message);
+        toast.success(res.data.message);
+        dispatch(updateUser(res.data.data));
       } else {
-        message.error(res.data.message);
+        toast.error(res.data.message);
       }
     } catch (error) {
       dispatch(hideLoading());
       console.log(error);
-      message.error("somthing went wrong");
+      toast.error("somthing went wrong");
     }
   };
 
@@ -53,28 +56,111 @@ const NotificationPage = () => {
       );
       dispatch(hideLoading());
       if (res.data.success) {
-        message.success(res.data.message);
+        toast.success(res.data.message);
+        dispatch(updateUser(res.data.data));
       } else {
-        message.error(res.data.message);
+        toast.error(res.data.message);
       }
     } catch (error) {
       dispatch(hideLoading());
       console.log(error);
-      message.error("Somthing Went Wrong In Ntifications");
+      toast.error("Somthing Went Wrong while deleting notifications");
     }
   };
-  return (
-    <Layout>
-      <h4 className="p-3 text-center">Notification Page</h4>
-      <Tabs>
-        <Tabs.TabPane tab="unRead" key={0}>
+  // return (
+  //   <Layout>
+  //     <h4 className="p-3 text-center">Notification Page</h4>
+  //     <Tabs>
+  //       <Tabs.TabPane tab="UnRead" key={0}>
+  //         <div className="d-flex justify-content-end">
+  //           <h4 className="p-2" onClick={handleMarkAllRead}>
+  //             Mark All Read
+  //           </h4>
+  //         </div>
+  //         {user?.notification.map((notificationMgs) => (
+  //           <div className="card" style={{ cursor: "pointer" }}>
+  //             <div
+  //               className="card-text"
+  //               onClick={() => navigate(notificationMgs.onClickPath)}
+  //             >
+  //               {notificationMgs.message}
+  //             </div>
+  //           </div>
+  //         ))}
+  //       </Tabs.TabPane>
+  //       <Tabs.TabPane tab="Read" key={1}>
+  //         <div className="d-flex justify-content-end">
+  //           <h4
+  //             className="p-2 text-primary"
+  //             style={{ cursor: "pointer" }}
+  //             onClick={handleDeleteAllRead}
+  //           >
+  //             Delete All Read
+  //           </h4>
+  //         </div>
+  //         {user?.seennotification.map((notificationMgs) => (
+  //           <div className="card" style={{ cursor: "pointer" }}>
+  //             <div
+  //               className="card-text"
+  //               onClick={() => navigate(notificationMgs.onClickPath)}
+  //             >
+  //               {notificationMgs.message}
+  //             </div>
+  //           </div>
+  //         ))}
+  //       </Tabs.TabPane>
+  //     </Tabs>
+  //   </Layout>
+  // );
+
+  // For polling : frequently checking notification in every 4 seconds for admin.
+  const fetchUserData = async () => {
+    try {
+      const res = await axios.post(
+        "/api/v1/user/getUserData",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (res.data.success) {
+        dispatch(updateUser(res.data.data));
+      }
+    } catch (error) {
+      console.error("Polling error:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (user?.isAdmin) {
+      const interval = setInterval(() => {
+        fetchUserData();
+      }, 4000);
+
+      return () => clearInterval(interval);
+    }
+  }, [user]);
+
+  const items = [
+    {
+      label: "unRead",
+      key: "1",
+      children: (
+        <>
           <div className="d-flex justify-content-end">
-            <h4 className="p-2" onClick={handleMarkAllRead}>
+            <h4
+              className="p-2 text-primary"
+              style={{ cursor: "pointer" }}
+              onClick={handleMarkAllRead}
+            >
               Mark All Read
             </h4>
           </div>
-          {user?.notifcation.map((notificationMgs) => (
-            <div className="card" style={{ cursor: "pointer" }}>
+          {user?.notification.map((notificationMgs, index) => (
+            <div key={index} className="card" style={{ cursor: "pointer" }}>
               <div
                 className="card-text"
                 onClick={() => navigate(notificationMgs.onClickPath)}
@@ -83,8 +169,14 @@ const NotificationPage = () => {
               </div>
             </div>
           ))}
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="Read" key={1}>
+        </>
+      ),
+    },
+    {
+      label: "Read",
+      key: "2",
+      children: (
+        <>
           <div className="d-flex justify-content-end">
             <h4
               className="p-2 text-primary"
@@ -94,8 +186,8 @@ const NotificationPage = () => {
               Delete All Read
             </h4>
           </div>
-          {user?.seennotification.map((notificationMgs) => (
-            <div className="card" style={{ cursor: "pointer" }}>
+          {user?.seennotification.map((notificationMgs, index) => (
+            <div key={index} className="card" style={{ cursor: "pointer" }}>
               <div
                 className="card-text"
                 onClick={() => navigate(notificationMgs.onClickPath)}
@@ -104,8 +196,15 @@ const NotificationPage = () => {
               </div>
             </div>
           ))}
-        </Tabs.TabPane>
-      </Tabs>
+        </>
+      ),
+    },
+  ];
+
+  return (
+    <Layout>
+      <h4 className="p-3 text-center">Notification Page</h4>
+      <Tabs items={items} />
     </Layout>
   );
 };
