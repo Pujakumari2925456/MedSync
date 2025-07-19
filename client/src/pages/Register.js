@@ -1,10 +1,11 @@
 import React from 'react';
 import '../styles/RegisterStyles.css';
-import { Form, Input, message } from 'antd';
+import { Form, Input } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { showLoading,hideLoading } from '../redux/features/alertSlice';
+import { toast } from "react-toastify";
 const Register = () => {
     const navigate = useNavigate();
     const dispatch=useDispatch()
@@ -15,15 +16,15 @@ const Register = () => {
             dispatch(hideLoading())
             console.log(res.data); // for debugging
             if (res.data.success) {
-                message.success('Register Successfully!');
+                toast.success("Registered successfully!");
                 navigate('/login');
             } else {
-                message.error(res.data.message);
+                toast.error(res.data.message);
             }
         } catch (error) {
             dispatch(hideLoading());
             console.log(error);
-            message.error('Something went wrong');
+            toast.error('Something went wrong');
         }
     };
 

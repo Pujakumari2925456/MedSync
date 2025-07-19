@@ -1,5 +1,3 @@
-
-
 // import React from "react";
 // import "../styles/LayoutStyles.css";
 // import { adminMenu, userMenu } from "./../Data/data";
@@ -65,27 +63,70 @@
 
 // export default Layout;
 
-import React from "react";
+import React, { useEffect } from "react";
 import "../styles/LayoutStyles.css";
 import { adminMenu, userMenu } from "./../Data/data";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Badge, message } from "antd";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { updateUser } from "../redux/features/userSlice";
+import axios from "axios";
 
 const Layout = ({ children }) => {
   const { user } = useSelector((state) => state.user);
+  // console.log(user);
+
+  const dispatch = useDispatch();
+
   const location = useLocation();
   const navigate = useNavigate();
 
   // logout function
   const handleLogout = () => {
     localStorage.clear();
-    message.success("Logout Successfully");
+    toast.success("Logged out successfully!");
     navigate("/login");
+  };
+
+  //For polling: fetching here as layout is used in every so useeffect will trigger on every page in 5 sec
+  const fetchUserData = async () => {
+    try {
+      const res = await axios.post(
+        "/api/v1/user/getUserData",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (res.data.success) {
+        if (
+          user?.notification &&
+          res.data.data.notification.length > user.notification.length
+        ) {
+          toast.info("New notification received!");
+        }
+
+        dispatch(updateUser(res.data.data));
+      }
+    } catch (error) {
+      console.error("Polling error:", error);
+    }
   };
 
   // Choose menu based on user role
   const SidebarMenu = user?.isAdmin ? adminMenu : userMenu;
+
+  useEffect(() => {
+    if (user?.isAdmin) {
+      const interval = setInterval(fetchUserData, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [user]);
 
   return (
     <>
@@ -100,7 +141,10 @@ const Layout = ({ children }) => {
               {SidebarMenu.map((menu) => {
                 const isActive = location.pathname === menu.path;
                 return (
-                  <div key={menu.path} className={`menu-item ${isActive && "active"}`}>
+                  <div
+                    key={menu.path}
+                    className={`menu-item ${isActive && "active"}`}
+                  >
                     <i className={menu.icon}></i>
                     <Link to={menu.path}>{menu.name}</Link>
                   </div>
@@ -115,14 +159,17 @@ const Layout = ({ children }) => {
 
           <div className="content">
             <div className="header">
-              <div className="header-content">
-                {/* <Badge count={user && user.notification.length}>
-                <i className="fa-solid fa-bell"></i>
-                </Badge> */}
-                {<Badge count={user?.notification?.length || 0}>
-                <i className="fa-solid fa-bell"></i>
-                </Badge>}
-
+              <div className="header-content" style={{ cursor: "pointer" }}>
+                {
+                  <Badge
+                    count={user?.notification?.length || 0}
+                    onClick={() => {
+                      navigate("/notification");
+                    }}
+                  >
+                    <i className="fa-solid fa-bell"></i>
+                  </Badge>
+                }
                 <Link to="/profile">{user?.name}</Link>
               </div>
             </div>

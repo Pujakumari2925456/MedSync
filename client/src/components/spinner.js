@@ -1,26 +1,29 @@
-// import { useState, CSSProperties } from "react";
-// import { ClipLoader } from "react-spinners";
-// import React from "react";
-
-// const spinner = () => {
-//   return (
-//     <div class="d-flex justify-content-center spinner">
-//       <div class="spinner-border" role="status">
-//         <span class="visually-hidden">Loading...</span>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default spinner;
-import React from "react";
+import React, { useState } from "react";
+import { RiseLoader  } from "react-spinners";
 
 const Spinner = () => {
+  const [loading, setLoading] = useState(true);
+  const [color, setColor] = useState("#2f2f2f"); // You can change this color
+
   return (
-    <div className="d-flex justify-content-center spinner">
-      <div className="spinner-border" role="status">
-        <span className="visually-hidden">Loading...</span>
-      </div>
+    <div
+      style={{
+        height: "100vh",
+        width: "100vw",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#f5f5f5", // Optional
+      }}
+    >
+      <RiseLoader 
+        color={color}
+        loading={loading}
+        size={30} // This is the box size (not the entire spinner)
+        aria-label="Loading Spinner"
+        data-testid="loader"
+        speedMultiplier={2}
+      />
     </div>
   );
 };
